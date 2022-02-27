@@ -232,11 +232,35 @@
     <ClCompile Include="TestImgui.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Weather\WeatherMap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Weather\WorldSquare.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Weather\AirMass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Weather\Wind.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Weather\WorldHight.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Weather\PressureSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TestImgui.h" />
+    <ClInclude Include="Weather\WeatherMap.h" />
+    <ClInclude Include="Weather\WorldSquare.h" />
+    <ClInclude Include="Weather\AirMass.h" />
+    <ClInclude Include="Weather\Wind.h" />
+    <ClInclude Include="Weather\WorldHight.h" />
+    <ClInclude Include="Weather\PressureSystem.h" />
   </ItemGroup>
 </Project>

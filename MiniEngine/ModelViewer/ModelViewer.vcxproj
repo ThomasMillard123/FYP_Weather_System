@@ -57,8 +57,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Weather\PressureSystem.cpp" />
+    <ClCompile Include="Weather\AirMass.cpp" />
     <ClCompile Include="ModelViewer.cpp" />
     <ClCompile Include="TestImgui.cpp" />
+    <ClCompile Include="Weather\WeatherMap.cpp" />
+    <ClCompile Include="Weather\WorldSquare.cpp" />
+    <ClCompile Include="Weather\Wind.cpp" />
+    <ClCompile Include="Weather\WorldHight.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="../Core/Core.vcxproj">
@@ -355,7 +361,13 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Weather\PressureSystem.h" />
+    <ClInclude Include="Weather\AirMass.h" />
     <ClInclude Include="TestImgui.h" />
+    <ClInclude Include="Weather\WeatherMap.h" />
+    <ClInclude Include="Weather\WorldSquare.h" />
+    <ClInclude Include="Weather\Wind.h" />
+    <ClInclude Include="Weather\WorldHight.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ItemDefinitionGroup>
