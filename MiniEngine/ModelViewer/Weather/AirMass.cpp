@@ -51,3 +51,8 @@ FrontType AirMass::IsHit(AirMass* airMass)
 
     return frontType;
 }
+
+int AirMass::GetTemp()
+{
+    return RandomGen::random<int>(minTemp, maxTemp);
+}

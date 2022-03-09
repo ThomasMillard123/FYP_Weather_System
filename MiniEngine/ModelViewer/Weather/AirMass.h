@@ -3,6 +3,7 @@
 
 #include<cmath>
 #include<vector>
+#include"C++HelperFunctions.h"
 enum class AirMassType
 {
 	Hot = 0,
@@ -17,6 +18,9 @@ enum FrontType
 	StationaryFront,
 	OccludedFront
 };
+
+//set weather fronts
+//set temp of area
 class AirMass
 {
 public:
@@ -33,6 +37,9 @@ public:
 	AirMassType GetAirmassType() { return m_AirMassType; }
 	float GetPower() { return Power; }
 
+	int GetTemp();
+	int GetMaxTemp() { return maxTemp; }
+	int GetMinTemp() { return minTemp; }
 private:
 	AirMassType m_AirMassType;
 	DirectX::XMFLOAT3 Pos;

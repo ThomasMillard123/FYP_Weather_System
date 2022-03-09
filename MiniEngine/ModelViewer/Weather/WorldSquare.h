@@ -35,8 +35,6 @@ private:
 	void CreatDewPoint();
 
 	void CaluateCloudHight();
-
-
 	void CaluateHumidity();
 
 	void CleanUp();
