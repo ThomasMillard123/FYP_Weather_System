@@ -1,5 +1,6 @@
 #include "WeatherMap.h"
-
+#include< cmath >
+#include"C++HelperFunctions.h"
 WeatherMap::WeatherMap()
 {
 }
@@ -58,6 +59,43 @@ WorldSquare* WeatherMap::GetWorldData(int Num)
 	return m_WorldSquareData[Num];
 }
 
+WorldSquare* WeatherMap::GetWorldSquare(int x, int z)
+{
+	return m_WorldSquareData[x+ (int)WeatherMapSize.x+z];
+}
+
+std::vector<WorldSquare*> WeatherMap::GetSquareInArea(int size, DirectX::XMFLOAT3 Pos)
+{
+	std::vector<WorldSquare*> SquareInSpace;
+	for (auto worldSquar : m_WorldSquareData)
+	{
+		if (std::pow((worldSquar->GetPos().x - Pos.x),2) + std::pow((worldSquar->GetPos().y - Pos.y),2) < std::pow(size,2))
+		{
+			SquareInSpace.push_back(worldSquar);
+		}
+	}
+
+	return SquareInSpace;
+}
+
+std::vector<WorldSquare*> WeatherMap::GetSquareInArea(int width, int hight, DirectX::XMFLOAT3 Pos)
+{
+	std::vector<WorldSquare*> SquareInSpace;
+	for (auto worldSquar : m_WorldSquareData)
+	{
+
+		if (worldSquar->GetPos().x >= Pos.x &&
+			worldSquar->GetPos().x <= (Pos.x + width) &&
+			worldSquar->GetPos().y >= Pos.y &&
+			worldSquar->GetPos().y <= (Pos.y + hight))
+		{
+			SquareInSpace.push_back(worldSquar);
+		}
+	}
+
+	return SquareInSpace;
+}
+
 std::vector<AirMass*> WeatherMap::GetAirMassData()
 {
 	return m_AirMassData;
@@ -76,6 +114,33 @@ std::vector<PressureSystem*> WeatherMap::GetPressureSystemData()
 PressureSystem* WeatherMap::GetPressureSystem(int Num)
 {
 	return m_PressureSystems[Num];
+}
+
+void WeatherMap::SetWindData()
+{
+	//find 
+
+}
+
+void WeatherMap::SetAirMassData()
+{
+	for (auto airMass: m_AirMassData)
+	{
+		std::vector<WorldSquare*> squareintAirmass = GetSquareInArea(airMass->GetSize(), airMass->GetPos());
+		int temp;
+		if (airMass->GetAirmassType() == AirMassType::Hot) {
+			temp = RandomGen::random<int>(30, 40);
+		}
+		
+		temp = RandomGen::random<int>(15, 30);
+		temp = RandomGen::random<int>(-5, 5);
+		for (auto squaer : squareintAirmass)
+		{
+			//base temp warm
+			squaer->SetSerfaceTemp(temp);
+		}
+	}
+
 }
 
 

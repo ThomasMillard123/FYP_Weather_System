@@ -18,6 +18,9 @@ public:
 
 	void Update();
 
+	PressuerSystemType GetPressuerSystemType() { return m_PressuerSystemType; }
+	double GetPower() { return Power; }
+	DirectX::XMFLOAT3 GetPos() { return Pos; }
 private:
 	PressuerSystemType m_PressuerSystemType;
 

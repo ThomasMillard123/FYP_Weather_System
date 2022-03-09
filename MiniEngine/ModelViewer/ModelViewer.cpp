@@ -35,6 +35,9 @@
 #include "Display.h"
 #include"ImGuiManager.h"
 #include"TestImgui.h"
+
+#include"Weather/WeatherMap.h"
+
 #define LEGACY_RENDERER
 
 using namespace GameCore;
@@ -67,6 +70,8 @@ private:
     ModelInstance m_ModelInst;
     ShadowCamera m_SunShadowCamera;
     DescriptorHeap desheap;
+
+    WeatherMap Map;
 };
 
 CREATE_APPLICATION( ModelViewer )
@@ -188,6 +193,9 @@ void ModelViewer::Startup( void )
 
     TestImgui* test = new TestImgui();
     ImGuiA::ImGuiManager::Instance()->AddRenderLayer(test);
+
+
+    Map.CreatWeatherMap(XMFLOAT3{ 100,100,100 }, 10, XMFLOAT2(10, 10));
 }
 
 void ModelViewer::Cleanup( void )

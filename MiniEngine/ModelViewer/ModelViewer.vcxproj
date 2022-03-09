@@ -361,6 +361,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Weather\C++HelperFunctions.h" />
     <ClInclude Include="Weather\PressureSystem.h" />
     <ClInclude Include="Weather\AirMass.h" />
     <ClInclude Include="TestImgui.h" />

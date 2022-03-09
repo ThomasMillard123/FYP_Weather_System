@@ -10,3 +10,7 @@ PressureSystem::PressureSystem(PressuerSystemType type, DirectX::XMFLOAT3 Pos, d
 	Power(Power)
 {
 }
+
+PressureSystem::~PressureSystem()
+{
+}

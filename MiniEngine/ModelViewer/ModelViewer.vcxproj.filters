@@ -262,5 +262,6 @@
     <ClInclude Include="Weather\Wind.h" />
     <ClInclude Include="Weather\WorldHight.h" />
     <ClInclude Include="Weather\PressureSystem.h" />
+    <ClInclude Include="Weather\C++HelperFunctions.h" />
   </ItemGroup>
 </Project>

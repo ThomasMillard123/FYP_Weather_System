@@ -15,7 +15,6 @@ public:
 	WeatherMap();
 	~WeatherMap();
 
-
 	void LoadFromJson(std::string JSON_WEATHER_DATA);
 
 
@@ -32,6 +31,7 @@ public:
 	WorldSquare* GetWorldSquare(int x, int z);
 	std::vector<WorldSquare*> GetSquareAround(int x, int z);
 	std::vector<WorldSquare*> GetSquareInArea(int size, DirectX::XMFLOAT3 Pos);
+	std::vector<WorldSquare*> GetSquareInArea(int width, int hight, DirectX::XMFLOAT3 Pos);
 
 	std::vector<AirMass*> GetAirMassData();
 	AirMass* GetAirMass(int Num);
@@ -40,8 +40,12 @@ public:
 	std::vector<PressureSystem*> GetPressureSystemData();
 	PressureSystem* GetPressureSystem(int Num);
 
-private:
 
+
+	void SetWindData();
+	void SetAirMassData();
+private:
+	void SmoothData();
 public:
 private:
 	//Location of weather and Data to be used
@@ -52,6 +56,15 @@ private:
 	std::vector<PressureSystem*> m_PressureSystems;
 
 	DirectX::XMFLOAT3 WeatherMapSize;
+
+
+	//season data
+	enum class Season
+	{
+		winter = 0,
+		Summer,
+	};
+	Season season;
 };
 
 
