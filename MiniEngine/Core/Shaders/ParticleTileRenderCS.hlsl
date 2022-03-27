@@ -53,7 +53,21 @@ float4 SampleParticleColor( ParticleScreenData Particle, SamplerState Sampler, f
     // Multiply texture RGB with alpha.  Pre-multiplied alpha blending also permits additive blending.
     Color.rgb *= Color.a;
 
-    return Color * Particle.Color;
+    float4 cameraPosition;
+    cameraPosition = mul(ViewerPos, gViewProj);
+
+    float3 toEyeW = ViewerPos - Particle.Position;
+    float distToEye = length(toEyeW);
+
+    float4 colour = Color* Particle.Color;
+
+    float fogAmount = saturate((distToEye - 1000) / 1300);
+    float4 fogColor;
+    fogColor = float4(0.5f, 0.5f, 0.5f, 1.0f);
+    float4 fogout = lerp(colour, fogColor, fogAmount);
+
+
+    return fogout;
 }
 
 void BlendPixel( inout float4 Dst, float4 Src, float Mask )
@@ -78,10 +92,13 @@ void BlendHighRes( inout float4x4 Quad, ParticleScreenData Particle, float2 Pixe
     float LevelBias = 0.0;
 #endif
 
-    BlendPixel(Quad[0], SampleParticleColor(Particle, Sampler, float2(UV1.x, UV2.y), LevelBias), Mask.x);
-    BlendPixel(Quad[1], SampleParticleColor(Particle, Sampler, float2(UV2.x, UV2.y), LevelBias), Mask.y);
-    BlendPixel(Quad[2], SampleParticleColor(Particle, Sampler, float2(UV2.x, UV1.y), LevelBias), Mask.z);
-    BlendPixel(Quad[3], SampleParticleColor(Particle, Sampler, float2(UV1.x, UV1.y), LevelBias), Mask.w);
+    float4 colour = SampleParticleColor(Particle, Sampler, float2(UV1.x, UV2.y), LevelBias);
+
+    BlendPixel(Quad[0], colour, Mask.x);
+    BlendPixel(Quad[1], colour, Mask.y);
+    BlendPixel(Quad[2], colour, Mask.z);
+    BlendPixel(Quad[3], colour, Mask.w);
+
 }
 
 void BlendLowRes( inout float4x4 Quad, ParticleScreenData Particle, float2 PixelCoord, float4 Mask = 1 )
@@ -91,6 +108,7 @@ void BlendLowRes( inout float4x4 Quad, ParticleScreenData Particle, float2 Pixel
 #ifdef DEBUG_LOW_RES
     Color.g *= 0.5;
 #endif
+
     BlendPixel(Quad[0], Color, Mask.x);
     BlendPixel(Quad[1], Color, Mask.y);
     BlendPixel(Quad[2], Color, Mask.z);
@@ -192,6 +210,7 @@ float4x4 RenderParticles( uint2 TileCoord, uint2 ST, uint NumParticles, uint Hit
         BinStart += 32;
 
     } // while
+  
 
     return Quad;
 }

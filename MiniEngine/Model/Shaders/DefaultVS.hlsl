@@ -30,6 +30,9 @@ cbuffer GlobalConstants : register(b1)
     float3 ViewerPos;
     float3 SunDirection;
     float3 SunIntensity;
+    float IBLRange;
+    float IBLBias;
+    float4x4 ViewMatrix;
 }
 
 #ifdef ENABLE_SKINNING
@@ -72,6 +75,7 @@ struct VSOutput
 #endif
     float3 worldPos : TEXCOORD2;
     float3 sunShadowCoord : TEXCOORD3;
+    float fogFactor : FOG;
 };
 
 [RootSignature(Renderer_RootSig)]
@@ -122,5 +126,10 @@ VSOutput main(VSInput vsInput)
     vsOutput.uv1 = vsInput.uv1;
 #endif
 
+    float4 cameraPosition;
+    cameraPosition = mul(ViewerPos, WorldMatrix);
+    cameraPosition = mul(cameraPosition, ViewMatrix);
+    vsOutput.fogFactor = saturate((1 - cameraPosition.z) / (1 - 0));
+    //vsOutput.fogFactor = 1.0f;
     return vsOutput;
 }

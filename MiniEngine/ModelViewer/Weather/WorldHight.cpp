@@ -43,7 +43,7 @@ void WorldHight::CaluateTemp()
     for (size_t i = 0; i <= size; i++)
     {
        float h = ((LevelStart + i) / 100) * 1000;
-        tempAdd += 15 - (0.0065f * h);
+        tempAdd += temp - (0.0065f * h);
     }
     //avrag temp
     temp = tempAdd / size;
@@ -65,10 +65,10 @@ void WorldHight::CaluatePresser()
     for (size_t i = 0; i <= size; i++)
     {
         h= ((LevelStart + i) / 100)*1000;
-        presser += P * std::exp(-(g * M) * (h - 0) / (R * T));
+        presser = P * std::exp(-(g * M) * (h - 0) / (R * T));
     }
     //avrag temp
-    pressuer = presser/size;
+    pressuer = presser;
 }
 
 

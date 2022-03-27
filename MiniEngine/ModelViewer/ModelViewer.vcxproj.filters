@@ -250,6 +250,9 @@
     <ClCompile Include="Weather\PressureSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Fog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -263,5 +266,6 @@
     <ClInclude Include="Weather\WorldHight.h" />
     <ClInclude Include="Weather\PressureSystem.h" />
     <ClInclude Include="Weather\C++HelperFunctions.h" />
+    <ClInclude Include="Fog.h" />
   </ItemGroup>
 </Project>

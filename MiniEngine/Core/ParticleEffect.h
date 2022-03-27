@@ -22,11 +22,21 @@ class ParticleEffect
 public:
     ParticleEffect(ParticleEffectProperties& effectProperties);
     void LoadDeviceResources(ID3D12Device* device);
+    void LoadDeviceResources();
     void Update(ComputeContext& CompContext, float timeDelta);
     float GetLifetime(){ return m_EffectProperties.TotalActiveLifetime; }
     float GetElapsedTime(){ return m_ElapsedTime; }
     void Reset();
-
+    ParticleEffectProperties GetOriginalEffectProperties() { return m_OriginalEffectProperties; }
+    void SetParticalProperties(ParticleEffectProperties prop) {
+        m_EffectProperties = prop;
+        
+        if (m_OriginalEffectProperties.EmitProperties.MaxParticles != m_EffectProperties.EmitProperties.MaxParticles) {
+            LoadDeviceResources();
+        }
+       Reset();
+    }
+    bool enabled= true;
 private:
 
     StructuredBuffer m_StateBuffers[2];

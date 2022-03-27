@@ -14,8 +14,8 @@
 #pragma once
 
 #include <string>
-
+#include<vector>
 namespace ParticleEffects
 {
-    void InitFromJSON(const std::wstring& InitJsonFile);
+    std::vector<int> InitFromJSON(const std::wstring& InitJsonFile);
 }

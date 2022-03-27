@@ -22,18 +22,27 @@ public:
 	DirectX::XMFLOAT3 GetPos() { return PositionCenter; }
 	DirectX::XMFLOAT2 GetSize() { return Size; }
 	int  GetHightLimitLayers() { return HightLimit; }
-	int GetHightLinitY() { return HightLimitY; }
+	int GetHightLimitY() { return HightLimitY; }
 
 
 	void SetSerfaceTemp(int temp);
 
 	void Update();
+
+
+
+	int GetTempFromLayer(int Layer) { return HightAreas[Layer]->GetTemp(); }
+	double GetPressuerFromLayer(int Layer){return HightAreas[Layer]->Getpressuer(); }
+
+	bool GetIsActive() { return isActive; }
+	void SetActiveWeather();
+	void DeatvateWeather();
 private:
 	void CreatHightData();
 	void CreatWindData();
 	void CreatPresuerData();
 	void CreatDewPoint();
-
+	void LoadEffects();
 	void CaluateCloudHight();
 	void CaluateHumidity();
 
@@ -53,6 +62,8 @@ private:
 
 	//weather data
 	int pressuer;
+
+
 	int sufaceTemp;
 	float dewPointTemp;
 	float humidity;
@@ -60,5 +71,9 @@ private:
 	//cloud data
 	float CloudHight;
 	float elevation=0;
+
+	//efffect data
+	bool isActive=false;
+	vector<int> EffectsData;
 };
 

@@ -35,6 +35,6 @@ ParticleVertexOutput main( uint BillboardVertex : SV_VertexID, uint InstanceId :
 
     Out.Pos = mul( gViewProj, float4(Position, 1) );
     Out.LinearZ = Out.Pos.w * gRcpFarZ;
-
+    Out.worldPos = Position;
     return Out;
 }

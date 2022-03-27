@@ -66,4 +66,5 @@ __declspec(align(256)) struct GlobalConstants
     Math::Vector3 SunIntensity;
     float IBLRange;
     float IBLBias;
+    Math::Matrix4 ViewMatrix;
 };

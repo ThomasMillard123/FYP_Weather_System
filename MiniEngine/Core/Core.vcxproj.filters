@@ -692,6 +692,7 @@
     <None Include="Shaders\PresentRS.hlsli">
       <Filter>Shaders</Filter>
     </None>
+    <None Include="Shaders\FogData.hlsli" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Shaders">

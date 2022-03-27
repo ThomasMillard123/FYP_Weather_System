@@ -54,10 +54,11 @@ namespace
         }
     }
 
-    void InstantiateEffect( ParticleEffectProperties& effectProperties )
+    ParticleEffectManager::EffectHandle InstantiateEffect( ParticleEffectProperties& effectProperties )
     {
         effectProperties.EmitProperties.TextureID = GetTextureIndex(effectProperties.TexturePath);
-        ParticleEffectManager::InstantiateEffect(effectProperties);
+        ParticleEffectManager::EffectHandle a = ParticleEffectManager::InstantiateEffect(effectProperties);
+        return a;
     }
 }
 
@@ -75,114 +76,118 @@ namespace
 #define MAKE_VECTOR4(it) Vector4((float)it.value()[0], (float)it.value()[1], (float)it.value()[2], (float)it.value()[3])
 #define MAKE_XMFLOAT2(it) XMFLOAT2((float)it.value()[0], (float)it.value()[1])
 #define MAKE_XMFLOAT3(it) XMFLOAT3((float)it.value()[0], (float)it.value()[1], (float)it.value()[2])
-
-void ParticleEffects::InitFromJSON(const wstring& InitJsonFile)
+namespace ParticleEffects
 {
-    using json = nlohmann::json;
-
-    json particle_setup;
-    ifstream(InitJsonFile) >> particle_setup;
-
-    if (!particle_setup.is_object() || particle_setup.find("ParticleEmitters") == particle_setup.end())
-        return;
-
-    for (auto& emitter : particle_setup["ParticleEmitters"])
+    std::vector<int> ParticleEffects::InitFromJSON(const wstring& InitJsonFile)
     {
-        ParticleEffectProperties Effect = ParticleEffectProperties();
+        using json = nlohmann::json;
+        std::vector<int> Effects;
+        json particle_setup;
+        ifstream(InitJsonFile) >> particle_setup;
 
-        for (json::iterator it = emitter.begin(); it != emitter.end(); ++it)
+        if (!particle_setup.is_object() || particle_setup.find("ParticleEmitters") == particle_setup.end())
+            return Effects;
+
+        for (auto& emitter : particle_setup["ParticleEmitters"])
         {
-            if (it.key() == "TexturePath")
+            ParticleEffectProperties Effect = ParticleEffectProperties();
+
+            for (json::iterator it = emitter.begin(); it != emitter.end(); ++it)
             {
-                Effect.TexturePath = MAKE_WSTRING(it);
-            }
-            else if (it.key() == "MinStartColor")
-            {
-                Effect.MinStartColor = MAKE_COLOR(it);
-            }
-            else if (it.key() == "MaxStartColor")
-            {
-                Effect.MaxStartColor = MAKE_COLOR(it);
-            }
-            else if (it.key() == "MinEndColor")
-            {
-                Effect.MinEndColor = MAKE_COLOR(it);
-            }
-            else if (it.key() == "MaxEndColor")
-            {
-                Effect.MaxEndColor = MAKE_COLOR(it);
-            }
-            else if (it.key() == "MaxEndColor")
-            {
-                Effect.MaxEndColor = MAKE_COLOR(it);
-            }
-            else if (it.key() == "TotalActiveLifetime")
-            {
-                Effect.TotalActiveLifetime = MAKE_FLOAT(it);
-                if (Effect.TotalActiveLifetime == 0.0f)
-                    Effect.TotalActiveLifetime = FLT_MAX;
-            }
-            else if (it.key() == "EmitRate")
-            {
-                Effect.EmitRate = MAKE_FLOAT(it);
-            }
-            else if (it.key() == "Size")
-            {
-                Effect.Size = MAKE_VECTOR4(it);
-            }
-            else if (it.key() == "Velocity")
-            {
-                Effect.Velocity = MAKE_VECTOR4(it);
-            }
-            else if (it.key() == "LifeMinMax")
-            {
-                Effect.LifeMinMax = MAKE_XMFLOAT2(it);
-            }
-            else if (it.key() == "MassMinMax")
-            {
-                Effect.MassMinMax = MAKE_XMFLOAT2(it);
-            }
-            else if (it.key() == "Spread")
-            {
-                Effect.Spread = MAKE_XMFLOAT3(it);
-            }
-            else if (it.key() == "EmitProperties")
-            {
-                for (json::iterator it2 = it.value().begin(); it2 != it.value().end(); ++it2)
+                if (it.key() == "TexturePath")
                 {
-                    if (it2.key() == "Gravity")
+                    Effect.TexturePath = MAKE_WSTRING(it);
+                }
+                else if (it.key() == "MinStartColor")
+                {
+                    Effect.MinStartColor = MAKE_COLOR(it);
+                }
+                else if (it.key() == "MaxStartColor")
+                {
+                    Effect.MaxStartColor = MAKE_COLOR(it);
+                }
+                else if (it.key() == "MinEndColor")
+                {
+                    Effect.MinEndColor = MAKE_COLOR(it);
+                }
+                else if (it.key() == "MaxEndColor")
+                {
+                    Effect.MaxEndColor = MAKE_COLOR(it);
+                }
+                else if (it.key() == "MaxEndColor")
+                {
+                    Effect.MaxEndColor = MAKE_COLOR(it);
+                }
+                else if (it.key() == "TotalActiveLifetime")
+                {
+                    Effect.TotalActiveLifetime = MAKE_FLOAT(it);
+                    if (Effect.TotalActiveLifetime == 0.0f)
+                        Effect.TotalActiveLifetime = FLT_MAX;
+                }
+                else if (it.key() == "EmitRate")
+                {
+                    Effect.EmitRate = MAKE_FLOAT(it);
+                }
+                else if (it.key() == "Size")
+                {
+                    Effect.Size = MAKE_VECTOR4(it);
+                }
+                else if (it.key() == "Velocity")
+                {
+                    Effect.Velocity = MAKE_VECTOR4(it);
+                }
+                else if (it.key() == "LifeMinMax")
+                {
+                    Effect.LifeMinMax = MAKE_XMFLOAT2(it);
+                }
+                else if (it.key() == "MassMinMax")
+                {
+                    Effect.MassMinMax = MAKE_XMFLOAT2(it);
+                }
+                else if (it.key() == "Spread")
+                {
+                    Effect.Spread = MAKE_XMFLOAT3(it);
+                }
+                else if (it.key() == "EmitProperties")
+                {
+                    for (json::iterator it2 = it.value().begin(); it2 != it.value().end(); ++it2)
                     {
-                        Effect.EmitProperties.Gravity = MAKE_XMFLOAT3(it2);
-                    }
-                    else if (it2.key() == "FloorHeight")
-                    {
-                        Effect.EmitProperties.FloorHeight = MAKE_FLOAT(it2);
-                    }
-                    else if (it2.key() == "MaxParticles")
-                    {
-                        Effect.EmitProperties.MaxParticles = MAKE_UINT(it2);
-                    }
-                    else if (it2.key() == "EmitPosW")
-                    {
-                        Effect.EmitProperties.EmitPosW = MAKE_XMFLOAT3(it2);
-                    }
-                    else if (it2.key() == "LastEmitPosW")
-                    {
-                        Effect.EmitProperties.LastEmitPosW = MAKE_XMFLOAT3(it2);
-                    }
-                    else
-                    {
-                        Utility::Printf("Warning:  Emitter property \"%s\" not found \n", it2.key().c_str());
+                        if (it2.key() == "Gravity")
+                        {
+                            Effect.EmitProperties.Gravity = MAKE_XMFLOAT3(it2);
+                        }
+                        else if (it2.key() == "FloorHeight")
+                        {
+                            Effect.EmitProperties.FloorHeight = MAKE_FLOAT(it2);
+                        }
+                        else if (it2.key() == "MaxParticles")
+                        {
+                            Effect.EmitProperties.MaxParticles = MAKE_UINT(it2);
+                        }
+                        else if (it2.key() == "EmitPosW")
+                        {
+                            Effect.EmitProperties.EmitPosW = MAKE_XMFLOAT3(it2);
+                        }
+                        else if (it2.key() == "LastEmitPosW")
+                        {
+                            Effect.EmitProperties.LastEmitPosW = MAKE_XMFLOAT3(it2);
+                        }
+                        else
+                        {
+                            Utility::Printf("Warning:  Emitter property \"%s\" not found \n", it2.key().c_str());
+                        }
                     }
                 }
-            }
-            else
-            {
-                Utility::Printf("Warning:  Effect property \"%s\" not found \n", it.key().c_str());
+                else
+                {
+                    Utility::Printf("Warning:  Effect property \"%s\" not found \n", it.key().c_str());
+                }
+
             }
 
+            Effects.push_back(InstantiateEffect(Effect));
         }
-
-        InstantiateEffect(Effect);
+        return Effects;
     }
+    
 }

@@ -39,6 +39,11 @@ ParticleEffect::ParticleEffect(ParticleEffectProperties& effectProperties)
     m_EffectProperties = effectProperties;
 }
 
+void ParticleEffect::LoadDeviceResources(ID3D12Device* device)
+{
+    LoadDeviceResources();
+}
+
 inline static Color RandColor( Color c0, Color c1 )
 {
     // We might want to find min and max of each channel rather than assuming c0 <= c1
@@ -60,9 +65,9 @@ inline static XMFLOAT3 RandSpread( const XMFLOAT3& s )
         );
 }
 
-void ParticleEffect::LoadDeviceResources(ID3D12Device* device)
+void ParticleEffect::LoadDeviceResources(/*ID3D12Device* device*/)
 {
-    (device); // Currently unused.  May be useful with multi-adapter support.
+    /*(device);*/ // Currently unused.  May be useful with multi-adapter support.
 
     m_OriginalEffectProperties = m_EffectProperties; //In case we want to reset
     
@@ -89,11 +94,15 @@ void ParticleEffect::LoadDeviceResources(ID3D12Device* device)
         SpawnData.RotationSpeed = s_RNG.NextFloat(); //todo
         SpawnData.Random = s_RNG.NextFloat();
     }
-    
+    if (m_RandomStateBuffer.GetBufferSize() > 0) {
+        m_RandomStateBuffer.Destroy();
+    }
     m_RandomStateBuffer.Create(L"ParticleSystem::SpawnDataBuffer", m_EffectProperties.EmitProperties.MaxParticles, sizeof(ParticleSpawnData), pSpawnData);
     _freea(pSpawnData);
 
+    if (m_StateBuffers[0].GetBufferSize() > 0)  m_StateBuffers[0].Destroy();
     m_StateBuffers[0].Create(L"ParticleSystem::Buffer0", m_EffectProperties.EmitProperties.MaxParticles, sizeof(ParticleMotion));
+    if (m_StateBuffers[1].GetBufferSize() > 0)  m_StateBuffers[1].Destroy();
     m_StateBuffers[1].Create(L"ParticleSystem::Buffer1", m_EffectProperties.EmitProperties.MaxParticles, sizeof(ParticleMotion));
     m_CurrentStateBuffer = 0;
 
@@ -163,4 +172,5 @@ void ParticleEffect::Update(ComputeContext& CompContext,  float timeDelta)
 void ParticleEffect::Reset()
 {
     m_EffectProperties = m_OriginalEffectProperties;
+
 }

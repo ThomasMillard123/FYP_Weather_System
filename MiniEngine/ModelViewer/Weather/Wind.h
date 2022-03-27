@@ -7,7 +7,10 @@ public:
     Wind();
     ~Wind();
 
+    void SetDir(DirectX::XMFLOAT3 dir) { Dir = dir; }
+    DirectX::XMFLOAT3 GetDir() { return Dir; }
     void CaluatePower();
+    int GetPower() { return Power; }
 private:
     DirectX::XMFLOAT3 Dir;
     int Power;

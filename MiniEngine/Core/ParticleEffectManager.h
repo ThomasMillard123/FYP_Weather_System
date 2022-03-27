@@ -39,6 +39,8 @@ namespace ParticleEffectManager
     void ResetEffect(EffectHandle EffectID);
     float GetCurrentLife(EffectHandle EffectID);
     void RegisterTexture(uint32_t index, const Texture& texture);
+    ParticleEffect* GetEffect(const uint32_t a);
+    ParticleEffect* GetEffectFromAll(const uint32_t a);
 
     extern BoolVar Enable;
     extern BoolVar PauseSim;

@@ -1,4 +1,6 @@
 #pragma once
+#include"ParticleEffects.h"
+#include"ParticleEffectManager.h"
 class WorldHight
 {
 public:
@@ -8,6 +10,13 @@ public:
     ~WorldHight();
 
     void SetTemp(int Temp);
+
+    //gets
+    int GetLevel() { return Level; }
+    int GetLevelStart() { return LevelStart; }
+    int GetSize() { return size; }
+    int GetTemp() { return temp; }
+    double Getpressuer() { return pressuer; }
 private:
     void CaluateTemp();
     void CaluatePresser();
@@ -24,6 +33,6 @@ private:
     //celciuse
     int temp;
     //atm
-    float pressuer;
+    double pressuer;
 };
 

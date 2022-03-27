@@ -70,6 +70,7 @@ void main( uint3 DTid : SV_DispatchThreadID )
     Particle.Color = Sprite.Color;
     Particle.TextureIndex = (float)Sprite.TextureID;
     Particle.TextureLevel = TextureLevel;
+    Particle.Position = Sprite.Position;
 
     float2 TopLeft = max(Particle.Corner * gBufferDim, 0.0);
     float2 BottomRight = max(TopLeft + gBufferDim / Particle.RcpSize, 0.0);

@@ -48,13 +48,13 @@ void main( uint3 DTid : SV_DispatchThreadID )
     ParticleState.Velocity += Gravity * ParticleState.Mass * StepSize;
 
     // Rebound off the ground if we didn't consume all of the elapsed time
-    StepSize = gElapsedTime - StepSize;
-    if (StepSize > 0.0)
+   /* StepSize = gElapsedTime - StepSize;
+    if (StepSize > 100)
     {
         ParticleState.Velocity = reflect(ParticleState.Velocity, float3(0, 1, 0)) * Restitution;
         ParticleState.Position += ParticleState.Velocity * StepSize;
         ParticleState.Velocity += Gravity * ParticleState.Mass * StepSize;
-    }
+    }*/
 
     // The spawn dispatch will be simultaneously adding particles as well.  It's possible to overflow.
     uint index = g_OutputBuffer.IncrementCounter();    

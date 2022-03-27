@@ -176,7 +176,7 @@ void ModelViewer::Startup( void )
     ImGuiA::ImGuiManager::Instance()->Initialise(GameCore::g_hWnd, Graphics::g_Device, desheap.GetHeapPointer());
     m_ModelInst = Renderer::LoadModel(L"cathedral/scene.gltf", forceRebuild);
     m_ModelInst.LoopAllAnimations();
-    //m_ModelInst.Resize(10.0f);
+   
     m_ModelInst.Resize(10.0f * m_ModelInst.GetRadius());
             OrientedBox obb = m_ModelInst.GetBoundingBox();
             float modelRadius = Length(obb.GetDimensions()) * 0.5f;
@@ -195,7 +195,13 @@ void ModelViewer::Startup( void )
     ImGuiA::ImGuiManager::Instance()->AddRenderLayer(test);
 
 
-    Map.CreatWeatherMap(XMFLOAT3{ 100,100,100 }, 10, XMFLOAT2(10, 10));
+    Map.CreatWeatherMap(XMFLOAT3{ 10000,100,15000 }, 10, XMFLOAT2(10, 10));
+   /* Map.CreatAirMass(AirMassType::Hot, XMFLOAT3(0, 0, 0), 100, 500);
+    Map.CreatAirMass(AirMassType::Cold, XMFLOAT3(500, 0, 500), 100, 600);*/
+
+    Map.CreatAirMass(AirMassType::Hot, XMFLOAT3(0- 10000/2, 0, 0), 100, 4000);
+    Map.CreatAirMass(AirMassType::Cold, XMFLOAT3(0, 0, 0), 100, 6000);
+    Map.CreatAirMass(AirMassType::Hot, XMFLOAT3(0+(10000/2), 0, 15000 / 2), 100, 4000);
 }
 
 void ModelViewer::Cleanup( void )
@@ -226,10 +232,15 @@ void ModelViewer::Update( float deltaT )
         DebugZoom.Increment();
 
     m_CameraController->Update(deltaT);
+    Map.Update(deltaT);
 
     GraphicsContext& gfxContext = GraphicsContext::Begin(L"Scene Update");
 
     m_ModelInst.Update(gfxContext, deltaT);
+
+
+   
+
 
     gfxContext.Finish();
 
@@ -298,6 +309,7 @@ void ModelViewer::RenderScene( void )
 
         MeshSorter sorter(MeshSorter::kDefault);
 		sorter.SetCamera(m_Camera);
+        
 		sorter.SetViewport(viewport);
 		sorter.SetScissor(scissor);
 		sorter.SetDepthStencilTarget(g_SceneDepthBuffer);
@@ -332,6 +344,7 @@ void ModelViewer::RenderScene( void )
             }
 
             gfxContext.TransitionResource(g_SceneColorBuffer, D3D12_RESOURCE_STATE_RENDER_TARGET, true);
+            g_SceneColorBuffer.SetClearColor(Color(0.5f, 0.5f, 0.5f));
             gfxContext.ClearColor(g_SceneColorBuffer);
 
             {
@@ -345,9 +358,9 @@ void ModelViewer::RenderScene( void )
                 sorter.RenderMeshes(MeshSorter::kOpaque, gfxContext, globals);
             }
 
-            Renderer::DrawSkybox(gfxContext, m_Camera, viewport, scissor);
+            //Renderer::DrawSkybox(gfxContext, m_Camera, viewport, scissor);
 
-            sorter.RenderMeshes(MeshSorter::kTransparent, gfxContext, globals);
+            //sorter.RenderMeshes(MeshSorter::kTransparent, gfxContext, globals);
         }
     }
 

@@ -46,6 +46,8 @@ cbuffer CBChangesPerView : register(b1)
     uint gTileRowPitch;
     uint gTilesPerRow;
     uint gTilesPerCol;
+
+    float3 ViewerPos;
 };
 
 struct ParticleVertex
@@ -66,6 +68,7 @@ struct ParticleScreenData
     float TextureIndex;
     float TextureLevel;
     uint Bounds;
+    float3 Position;
 };
 
 uint InsertZeroBit( uint Value, uint BitIdx )

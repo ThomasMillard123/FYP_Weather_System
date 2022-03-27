@@ -64,6 +64,7 @@ struct VSOutput
 #endif
     float3 worldPos : TEXCOORD2;
     float3 sunShadowCoord : TEXCOORD3;
+    float fogFactor : FOG;
 };
 
 // Numeric constants
@@ -290,6 +291,16 @@ float4 main(VSOutput vsOutput) : SV_Target0
 #endif
 
     // TODO: Shade each light using Forward+ tiles
+
+
+    float3 fogColor;
+    fogColor = float3(0.5f, 0.5f, 0.5f);
+
+    float3 toEyeW = ViewerPos - vsOutput.worldPos;
+    float distToEye = length(toEyeW);
+
+    float fogAmount = saturate((distToEye - 5) / 1000);
+    colorAccum = lerp(colorAccum, fogColor, fogAmount);
 
     return float4(colorAccum, baseColor.a);
 }

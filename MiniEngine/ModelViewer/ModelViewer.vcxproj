@@ -57,6 +57,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Fog.cpp" />
     <ClCompile Include="Weather\PressureSystem.cpp" />
     <ClCompile Include="Weather\AirMass.cpp" />
     <ClCompile Include="ModelViewer.cpp" />
@@ -361,6 +362,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Fog.h" />
     <ClInclude Include="Weather\C++HelperFunctions.h" />
     <ClInclude Include="Weather\PressureSystem.h" />
     <ClInclude Include="Weather\AirMass.h" />

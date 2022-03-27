@@ -563,6 +563,7 @@ void MeshSorter::RenderMeshes(
     context.SetDescriptorTable(kCommonSRVs, m_CommonTextures);
 
     // Set common shader constants
+    globals.ViewMatrix = m_Camera->GetViewMatrix();
 	globals.ViewProjMatrix = m_Camera->GetViewProjMatrix();
 	globals.CameraPos = m_Camera->GetPosition();
     globals.IBLRange = s_SpecularIBLRange - s_SpecularIBLBias;

@@ -62,4 +62,5 @@ struct ParticleVertexOutput
     nointerpolation uint TexID : TEXCOORD1;
     nointerpolation float4 Color : TEXCOORD2;
     nointerpolation float LinearZ : TEXCOORD3;
+    float3 worldPos : TEXCOORD4;
 };

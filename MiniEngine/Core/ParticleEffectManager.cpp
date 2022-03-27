@@ -113,6 +113,8 @@ struct CBChangesPerView
     uint32_t gTileRowPitch;
     uint32_t gTilesPerRow;
     uint32_t gTilesPerCol;
+
+    Math::Vector3 CameraPos;
 };
 
 namespace
@@ -531,6 +533,16 @@ void ParticleEffectManager::RegisterTexture(uint32_t index, const Texture& textu
     CommandContext::InitializeTextureArraySlice(TextureArray, index, (GpuResource&)texture);
 }
 
+ParticleEffect* ParticleEffectManager::GetEffect(const uint32_t a)
+{
+    return  ParticleEffectsActive[a];
+}
+
+ParticleEffect* ParticleEffectManager::GetEffectFromAll(const uint32_t a)
+{
+    return ParticleEffectsPool[a].get();
+}
+
 void ParticleEffectManager::Shutdown( void )
 {
     ClearAll();
@@ -604,6 +616,10 @@ void ParticleEffectManager::Update(ComputeContext& Context, float timeDelta )
 
     for (UINT i = 0; i < ParticleEffectsActive.size(); ++i)
     {	
+        if (!ParticleEffectsActive[i]->enabled) {
+            continue;
+        }
+
         ParticleEffectsActive[i]->Update(Context, timeDelta);
 
         if (ParticleEffectsActive[i]->GetLifetime() <= ParticleEffectsActive[i]->GetElapsedTime())
@@ -663,7 +679,7 @@ void ParticleEffectManager::Render( CommandContext& Context, const Camera& Camer
     s_ChangesPerView.gTileRowPitch = BinsPerRow * TILES_PER_BIN_X;
     s_ChangesPerView.gTilesPerRow = DivideByMultiple(Width, TILE_SIZE);
     s_ChangesPerView.gTilesPerCol = DivideByMultiple(Height, TILE_SIZE);
-
+    s_ChangesPerView.CameraPos = Camera.GetPosition();
     // For now, UAV load support for R11G11B10 is required to read-modify-write the color buffer, but
     // the compositing could be deferred.
     WARN_ONCE_IF(EnableTiledRendering && !g_bTypedUAVLoadSupport_R11G11B10_FLOAT,

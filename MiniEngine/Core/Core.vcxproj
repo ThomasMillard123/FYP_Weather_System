@@ -452,6 +452,7 @@
     <None Include="Shaders\CommonRS.hlsli" />
     <None Include="Shaders\DoFCommon.hlsli" />
     <None Include="Shaders\DoFRS.hlsli" />
+    <None Include="Shaders\FogData.hlsli" />
     <None Include="Shaders\FXAAPass1CS.hlsli" />
     <None Include="Shaders\FXAAPass2CS.hlsli" />
     <None Include="Shaders\FXAARootSignature.hlsli" />

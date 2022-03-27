@@ -25,5 +25,17 @@ float4 main(ParticleVertexOutput input ) : SV_Target0
     float4 TextureColor = ColorTex.Sample( gSampLinearBorder, uv );
     TextureColor.a *= saturate(1000.0 * (LinearDepthTex[(uint2)input.Pos.xy] - input.LinearZ));
     TextureColor.rgb *= TextureColor.a;
-    return TextureColor * input.Color;
+
+    float4 fogColor;
+    fogColor = float4(0.5f, 0.5f, 0.5f,1.0f);
+
+    float3 toEyeW = ViewerPos - input.worldPos;
+    float distToEye = length(toEyeW);
+
+    float fogAmount = saturate((distToEye - 5) / 1000);
+    float4 FianlColor = TextureColor * input.Color;
+    float4 fogData = lerp(FianlColor, fogColor, 0);
+    FianlColor.rgb = fogData.rgb;
+
+    return fogData;
 }

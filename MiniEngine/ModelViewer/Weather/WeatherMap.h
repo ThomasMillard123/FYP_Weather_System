@@ -6,6 +6,8 @@
 #include"WorldSquare.h"
 #include"AirMass.h"
 #include"PressureSystem.h"
+
+#define PI 3.14159265
 /// <summary>
 /// Overview of all the weathere in the world
 /// </summary>
@@ -32,6 +34,7 @@ public:
 	std::vector<WorldSquare*> GetSquareAround(int x, int z);
 	std::vector<WorldSquare*> GetSquareInArea(int size, DirectX::XMFLOAT3 Pos);
 	std::vector<WorldSquare*> GetSquareInArea(int width, int hight, DirectX::XMFLOAT3 Pos);
+	std::vector<WorldSquare*> GetSquareInArea(FrontData FrontData);
 
 	std::vector<AirMass*> GetAirMassData();
 	AirMass* GetAirMass(int Num);
@@ -45,6 +48,7 @@ public:
 	void SetWindData();
 	void SetAirMassData();
 private:
+	
 	void SmoothData();
 public:
 private:

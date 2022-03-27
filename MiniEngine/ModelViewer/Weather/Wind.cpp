@@ -2,6 +2,7 @@
 
 Wind::Wind()
 {
+    CaluatePower();
 }
 
 Wind::~Wind()
@@ -10,5 +11,5 @@ Wind::~Wind()
 
 void Wind::CaluatePower()
 {
-    RandomGen::random<int>(0, 12);
+    Power = RandomGen::random<int>(0, 12);
 }
