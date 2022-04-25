@@ -33,6 +33,7 @@ public:
 
 	int GetTempFromLayer(int Layer) { return HightAreas[Layer]->GetTemp(); }
 	double GetPressuerFromLayer(int Layer){return HightAreas[Layer]->Getpressuer(); }
+	int GetDewPoint() { return dewPointTemp; }
 
 	bool GetIsActive() { return isActive; }
 	void SetActiveWeather();

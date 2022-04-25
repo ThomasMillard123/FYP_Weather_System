@@ -61,13 +61,15 @@ float4 SampleParticleColor( ParticleScreenData Particle, SamplerState Sampler, f
 
     float4 colour = Color* Particle.Color;
 
-    float fogAmount = saturate((distToEye - 1000) / 1300);
-    float4 fogColor;
-    fogColor = float4(0.5f, 0.5f, 0.5f, 1.0f);
-    float4 fogout = lerp(colour, fogColor, fogAmount);
+    bool isFog = false;
+    if (isFog) {
+        float fogAmount = saturate((distToEye - 1000) / 1300);
+        float4 fogColor;
+        fogColor = float4(0.5f, 0.5f, 0.5f, 1.0f);
+        colour = lerp(colour, fogColor, fogAmount);
+    }
 
-
-    return fogout;
+    return colour;
 }
 
 void BlendPixel( inout float4 Dst, float4 Src, float Mask )

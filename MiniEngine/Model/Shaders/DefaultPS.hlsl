@@ -13,6 +13,7 @@
 
 #include "Common.hlsli"
 
+
 Texture2D<float4> baseColorTexture          : register(t0);
 Texture2D<float3> metallicRoughnessTexture  : register(t1);
 Texture2D<float1> occlusionTexture          : register(t2);
@@ -49,7 +50,12 @@ cbuffer GlobalConstants : register(b1)
     float _pad;
     float IBLRange;
     float IBLBias;
+    float4x4 ViewMatrix;
+    float FogDist;
+    float FogStart;
+    int FogOn;
 }
+
 
 struct VSOutput
 {
@@ -291,16 +297,17 @@ float4 main(VSOutput vsOutput) : SV_Target0
 #endif
 
     // TODO: Shade each light using Forward+ tiles
+    
+    if (FogOn==1) {
+        float3 fogColor;
+        fogColor = float3(0.5f, 0.5f, 0.5f);
 
+        float3 toEyeW = ViewerPos - vsOutput.worldPos;
+        float distToEye = length(toEyeW);
 
-    float3 fogColor;
-    fogColor = float3(0.5f, 0.5f, 0.5f);
-
-    float3 toEyeW = ViewerPos - vsOutput.worldPos;
-    float distToEye = length(toEyeW);
-
-    float fogAmount = saturate((distToEye - 5) / 1000);
-    colorAccum = lerp(colorAccum, fogColor, fogAmount);
-
+        float fogAmount = saturate((distToEye - FogStart) / FogDist);
+        colorAccum = lerp(colorAccum, fogColor, fogAmount);
+    }
+    
     return float4(colorAccum, baseColor.a);
 }

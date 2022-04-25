@@ -69,6 +69,7 @@ private:
 
     ModelInstance m_ModelInst;
     ShadowCamera m_SunShadowCamera;
+
     DescriptorHeap desheap;
 
     WeatherMap Map;
@@ -196,12 +197,7 @@ void ModelViewer::Startup( void )
 
 
     Map.CreatWeatherMap(XMFLOAT3{ 10000,100,15000 }, 10, XMFLOAT2(10, 10));
-   /* Map.CreatAirMass(AirMassType::Hot, XMFLOAT3(0, 0, 0), 100, 500);
-    Map.CreatAirMass(AirMassType::Cold, XMFLOAT3(500, 0, 500), 100, 600);*/
-
-    Map.CreatAirMass(AirMassType::Hot, XMFLOAT3(0- 10000/2, 0, 0), 100, 4000);
-    Map.CreatAirMass(AirMassType::Cold, XMFLOAT3(0, 0, 0), 100, 6000);
-    Map.CreatAirMass(AirMassType::Hot, XMFLOAT3(0+(10000/2), 0, 15000 / 2), 100, 4000);
+  
 }
 
 void ModelViewer::Cleanup( void )
@@ -302,7 +298,9 @@ void ModelViewer::RenderScene( void )
         globals.CameraPos = m_Camera.GetPosition();
         globals.SunDirection = SunDirection;
         globals.SunIntensity = Vector3(Scalar(g_SunLightIntensity));
-
+        globals.FogOn = Map.GetFogOn();
+        globals.FogDist = 1000;
+        globals.FogStart = 5;
   //      // Begin rendering depth
         gfxContext.TransitionResource(g_SceneDepthBuffer, D3D12_RESOURCE_STATE_DEPTH_WRITE, true);
         gfxContext.ClearDepth(g_SceneDepthBuffer);
@@ -360,7 +358,7 @@ void ModelViewer::RenderScene( void )
 
             //Renderer::DrawSkybox(gfxContext, m_Camera, viewport, scissor);
 
-            //sorter.RenderMeshes(MeshSorter::kTransparent, gfxContext, globals);
+            sorter.RenderMeshes(MeshSorter::kTransparent, gfxContext, globals);
         }
     }
 

@@ -1,7 +1,7 @@
 {
     "ParticleEmitters": [
       {
-        "TexturePath": "Weather/smoke.dds",
+        "TexturePath": "cathedral/textures/rain.dds",
 
         "MinStartColor": [ 8, 8, 8, 0 ],
         "MaxStartColor": [ 8, 8, 8, 0 ],
@@ -10,56 +10,76 @@
         "TotalActiveLifetime": 0.0,
         "Size": [ 8, 8, 8, 8 ],
         "Velocity": [ 0, 0, 0, 0 ],
-        "LifeMinMax": [ 1, 10 ],
+        "LifeMinMax": [ 5, 10 ],
         "MassMinMax": [ 0, 100 ],
         "EmitProperties": {
           "Gravity": [ 0, -10, 0 ],
-          "EmitPosW": [ 1120, 0, 405 ],
-          "LastEmitPosW": [ 1120, 0, 405 ],
-          "MaxParticles": 3000
+          "EmitPosW": [ 0, 0, 0 ],
+          "LastEmitPosW": [ 0, 0, 0 ],
+          "MaxParticles": 1
         },
-        "EmitRate": 3000,
+        "EmitRate": 64,
         "Spread": [ 1000, 0.5, 1500 ]
       },
       {
-        "TexturePath": "Weather/smoke.dds",
+        "TexturePath": "cathedral/textures/snow.dds",
         "MinStartColor": [ 8, 8, 8, 0 ],
         "MaxStartColor": [ 8, 8, 8, 0 ],
         "MinEndColor": [ 8, 8, 8, 0 ],
         "MaxEndColor": [ 8, 8, 8, 0 ],
-        "TotalActiveLifetime": 0.1,
-        "Size": [ 4, 8, 4, 8 ],
+        "TotalActiveLifetime": 0.0,
+        "Size": [ 8, 8, 8, 8 ],
         "Velocity": [ 0, 0, 0, 0 ],
-        "LifeMinMax": [ 1, 3 ],
+        "LifeMinMax": [ 5, 10 ],
         "MassMinMax": [ 0, 100 ],
         "EmitProperties": {
           "Gravity": [ 0, -10, 0 ],
-          "EmitPosW": [ 1120, 325, 405 ],
-          "LastEmitPosW": [ 1120, 325, 405 ],
-          "MaxParticles": 200
+          "EmitPosW": [ 0, 0, 0 ],
+          "LastEmitPosW": [ 0, 0, 0 ],
+          "MaxParticles": 1
         },
         "EmitRate": 64,
-        "Spread": [ 500, 0.5, 500 ]
+        "Spread": [ 1000, 0.5, 1500 ]
       },
       {
-        "TexturePath": "Weather/smoke.dds",
+        "TexturePath": "cathedral/textures/hail.dds",
         "MinStartColor": [ 8, 8, 8, 0 ],
         "MaxStartColor": [ 8, 8, 8, 0 ],
         "MinEndColor": [ 8, 8, 8, 0 ],
         "MaxEndColor": [ 8, 8, 8, 0 ],
-        "TotalActiveLifetime": 0.1,
-        "Size": [ 4, 8, 4, 8 ],
+        "TotalActiveLifetime": 0.0,
+        "Size": [ 8, 8, 8, 8 ],
         "Velocity": [ 0, 0, 0, 0 ],
-        "LifeMinMax": [ 1, 3 ],
+        "LifeMinMax": [ 5, 10 ],
         "MassMinMax": [ 0, 100 ],
         "EmitProperties": {
           "Gravity": [ 0, -10, 0 ],
-          "EmitPosW": [ 1120, 325, 405 ],
-          "LastEmitPosW": [ 1120, 325, 405 ],
-          "MaxParticles": 200
+          "EmitPosW": [ 0, 0, 0 ],
+          "LastEmitPosW": [ 0, 0, 0 ],
+          "MaxParticles": 1
         },
         "EmitRate": 64,
-        "Spread": [ 50, 0.5, 50 ]
+        "Spread": [ 1000, 0.5, 1500 ]
+      },
+      {
+        "TexturePath": "cathedral/textures/Smoke.dds",
+        "MinStartColor": [ 8, 8, 8, 0 ],
+        "MaxStartColor": [ 8, 8, 8, 0 ],
+        "MinEndColor": [ 8, 8, 8, 0 ],
+        "MaxEndColor": [ 8, 8, 8, 0 ],
+        "TotalActiveLifetime": 0.0,
+        "Size": [ 10, 10, 10, 10 ],
+        "Velocity": [ 0, 0, 0, 0 ],
+        "LifeMinMax": [ 1, 10 ],
+        "MassMinMax": [ 0, 0 ],
+        "EmitProperties": {
+          "Gravity": [ 0, 0, 0 ],
+          "EmitPosW": [ 1120, 0, 405 ],
+          "LastEmitPosW": [ 1120, 0, 405 ],
+          "MaxParticles": 1
+        },
+        "EmitRate": 64,
+        "Spread": [ 50, 100, 50 ]
       }
     ]
 }

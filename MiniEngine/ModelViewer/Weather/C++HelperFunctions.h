@@ -26,7 +26,19 @@ namespace RandomGen {
         return distr(generator);
     }
 
-    
+    static std::mt19937 generatorStatic;
+    static int seed=0;
+
+    template<typename T>
+    T random(T range_from, T range_to,int Seed) {
+        //std::random_device   rand_dev;
+        if (Seed != seed) {
+            generatorStatic.seed(Seed);
+            seed = Seed;
+        }
+        std::uniform_int_distribution<T>    distr(range_from, range_to);
+        return distr(generatorStatic);
+    }
 }
 
 namespace ListHelpers {

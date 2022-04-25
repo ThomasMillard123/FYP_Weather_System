@@ -2,6 +2,7 @@
 #include<vector>
 #include<string>
 #include<DirectXMath.h>
+#include <chrono>
 
 #include"WorldSquare.h"
 #include"AirMass.h"
@@ -31,7 +32,7 @@ public:
 	WorldSquare* GetWorldData(int Num);
 
 	WorldSquare* GetWorldSquare(int x, int z);
-	std::vector<WorldSquare*> GetSquareAround(int x, int z);
+	
 	std::vector<WorldSquare*> GetSquareInArea(int size, DirectX::XMFLOAT3 Pos);
 	std::vector<WorldSquare*> GetSquareInArea(int width, int hight, DirectX::XMFLOAT3 Pos);
 	std::vector<WorldSquare*> GetSquareInArea(FrontData FrontData);
@@ -43,10 +44,11 @@ public:
 	std::vector<PressureSystem*> GetPressureSystemData();
 	PressureSystem* GetPressureSystem(int Num);
 
-
+	void GenrateAirMass();
 
 	void SetWindData();
 	void SetAirMassData();
+	bool GetFogOn() { return FogOn; }
 private:
 	
 	void SmoothData();
@@ -61,7 +63,7 @@ private:
 
 	DirectX::XMFLOAT3 WeatherMapSize;
 
-
+	bool FogOn=false;
 	//season data
 	enum class Season
 	{
@@ -69,6 +71,10 @@ private:
 		Summer,
 	};
 	Season season;
+
+	std::chrono::steady_clock::time_point m_start;
+	std::chrono::steady_clock::time_point m_end;
+	double TimeStep = 100;
 };
 
 

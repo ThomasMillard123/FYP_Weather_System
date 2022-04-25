@@ -42,6 +42,7 @@
 #include "CompiledShaders/SkyboxVS.h"
 #include "CompiledShaders/SkyboxPS.h"
 
+
 #pragma warning(disable:4319) // '~': zero extending 'uint32_t' to 'uint64_t' of greater size
 
 using namespace Math;
@@ -213,6 +214,7 @@ void Renderer::Initialize(void)
     m_SkyboxAPSO = m_DefaultPSO;
     m_SkyboxAPSO.SetDepthStencilState(DepthStateReadOnly);
     //m_SkyboxAPSO.Finalize();
+
     TextureManager::Initialize(L"");
 
     s_TextureHeap.Create(L"Scene Texture Descriptors", D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 4096);

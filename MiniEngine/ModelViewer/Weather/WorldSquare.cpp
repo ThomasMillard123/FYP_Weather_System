@@ -81,44 +81,59 @@ void WorldSquare::SetSerfaceTemp(int temp)
 void WorldSquare::SetActiveWeather()
 {
 	isActive = true;
-	float tempdiff = sufaceTemp-dewPointTemp;
-	if (tempdiff > 2.5f) {
-		//fog
 
-	}
-	
+	ParticleEffect* EffectPorop;
+	EffectPorop = ParticleEffectManager::GetEffect(EffectsData[3]);
+	ParticleEffectManager::GetEffect(EffectsData[3])->enabled = true;
+	ParticleEffectProperties a = EffectPorop->GetOriginalEffectProperties();
+	//a.Velocity = XMFLOAT4(0, 0, 1, 0);
+	a.EmitProperties.MaxParticles = 5000;
+	a.EmitProperties.EmitPosW = PositionCenter;
+	a.EmitProperties.EmitPosW.y = CloudHight;
+	a.EmitProperties.LastEmitPosW = PositionCenter;
+	a.EmitProperties.LastEmitPosW.y = CloudHight;
+	a.Spread = XMFLOAT3(Size.x / 2, 100 , Size.y / 2);
+	EffectPorop->SetParticalProperties(a);
+
 	int chnace = RandomGen::random<int>(humidity, 100);
 	if (chnace > 25)
 	{
 		if (sufaceTemp <= 0 && sufaceTemp > -2) {
 			//snow
+			
 			ParticleEffect* EffectPorop;
-			//EffectPorop = ParticleEffectManager::GetEffect(EffectsData[1]);
-			//EffectPorop->enabled = true;
-			/*ParticleEffectProperties a = EffectPorop->GetOriginalEffectProperties();
-			a.Velocity=XMFLOAT4(0, 0, 1, 0);
-			a.EmitProperties.MaxParticles = 100 * chnace;
-			a.Spread = XMFLOAT3(Size.x, 0, Size.y);
-			EffectPorop->SetParticalProperties(a);*/
+			EffectPorop = ParticleEffectManager::GetEffect(EffectsData[1]);
+			ParticleEffectManager::GetEffect(EffectsData[1])->enabled = true;
+			ParticleEffectProperties a = EffectPorop->GetOriginalEffectProperties();
+			//a.Velocity = XMFLOAT4(0, 0, 1, 0);
+			a.EmitProperties.MaxParticles = 1000;
+
+			EffectPorop->SetParticalProperties(a);
 
 		}
 		else if (sufaceTemp <= -2) {
 			//hail
-			//ParticleEffectManager::GetEffect(EffectsData[2])->enabled = true;
+			ParticleEffect* EffectPorop;
+			EffectPorop = ParticleEffectManager::GetEffect(EffectsData[2]);
+			ParticleEffectManager::GetEffect(EffectsData[2])->enabled = true;
+			ParticleEffectProperties a = EffectPorop->GetOriginalEffectProperties();
+			//a.Velocity = XMFLOAT4(0, 0, 1, 0);
+			a.EmitProperties.MaxParticles = 1000;
+
+			EffectPorop->SetParticalProperties(a);
 		}
 		else
 		{
-			//rain
+			////rain
+			ParticleEffectManager::GetEffect(EffectsData[1])->enabled = false;
+			ParticleEffectManager::GetEffect(EffectsData[2])->enabled = false;
 			ParticleEffect* EffectPorop;
 			EffectPorop = ParticleEffectManager::GetEffect(EffectsData[0]);
 			ParticleEffectManager::GetEffect(EffectsData[0])->enabled = true;
 			ParticleEffectProperties a = EffectPorop->GetOriginalEffectProperties();
 			//a.Velocity = XMFLOAT4(0, 0, 1, 0);
-			a.EmitProperties.MaxParticles = 5000;
-			a.EmitProperties.EmitPosW = PositionCenter;
-			a.EmitProperties.EmitPosW.y = CloudHight;
-			a.EmitProperties.LastEmitPosW = PositionCenter;
-			a.EmitProperties.LastEmitPosW.y = CloudHight;
+			a.EmitProperties.MaxParticles = 1000;
+			
 			EffectPorop->SetParticalProperties(a);
 		}
 	}
@@ -169,8 +184,11 @@ void WorldSquare::LoadEffects()
 		ParticleEffectManager::GetEffect(data)->enabled = false;
 		ParticleEffectProperties a = ParticleEffectManager::GetEffect(data)->GetOriginalEffectProperties();
 		a.EmitProperties.EmitPosW = PositionCenter;
-		a.EmitProperties.EmitPosW.y = CloudHight;
+		a.EmitProperties.EmitPosW.y = HightAreas.back()->GetLevelStart();
+		a.EmitProperties.LastEmitPosW = PositionCenter;
+		a.EmitProperties.LastEmitPosW.y = HightAreas.back()->GetLevelStart();
 		a.Spread = XMFLOAT3(Size.x/2,0, Size.y/2);
+		a.EmitProperties.MaxParticles = 2000;
 		ParticleEffectManager::GetEffect(data)->SetParticalProperties(a);
 	}
 }
@@ -180,6 +198,10 @@ void WorldSquare::CaluateCloudHight()
 	CloudHight = ((sufaceTemp - 8) / 2.5f)*1000+(elevation* 3.281f);
 	CloudHight = CloudHight / 3.281f;
 	CloudHight *= 10;
+
+	if (CloudHight > HightAreas.back()->GetLevelStart()) {
+		CloudHight = HightAreas.back()->GetLevelStart();
+	}
 }
 
 void WorldSquare::CaluateHumidity()

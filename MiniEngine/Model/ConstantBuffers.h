@@ -67,4 +67,7 @@ __declspec(align(256)) struct GlobalConstants
     float IBLRange;
     float IBLBias;
     Math::Matrix4 ViewMatrix;
+    float FogDist;
+    float FogStart;
+    int FogOn;
 };

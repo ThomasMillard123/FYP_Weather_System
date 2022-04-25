@@ -3,6 +3,7 @@
 #include"C++HelperFunctions.h"
 #include"ParticleEffects.h"
 #include"ParticleEffectManager.h"
+
 WeatherMap::WeatherMap()
 {
 	
@@ -14,6 +15,7 @@ WeatherMap::~WeatherMap()
 
 void WeatherMap::CreatWeatherMap(DirectX::XMFLOAT3 Size, unsigned int HightLayerMax, DirectX::XMFLOAT2 SquareMax)
 {
+	m_start=std::chrono::steady_clock::now();
 	WorldSquare* worldSqare;
 	int SizeX = Size.x / SquareMax.x;
 	int SizeZ = Size.z / SquareMax.y;
@@ -26,7 +28,7 @@ void WeatherMap::CreatWeatherMap(DirectX::XMFLOAT3 Size, unsigned int HightLayer
 		for (size_t j = 0; j < SquareMax.x; j++)
 		{
 			Position.x += SizeX;
-			worldSqare = new WorldSquare(Position, SquareSize);
+			worldSqare = new WorldSquare(Position, SquareSize,10000,10);
 
 			m_WorldSquareData.push_back(worldSqare);
 
@@ -55,114 +57,132 @@ void WeatherMap::CreatAirMass(AirMassType Type, DirectX::XMFLOAT3 Pos, float Pow
 
 void WeatherMap::Update(float deltaT)
 {
-	//time componets
-	std::vector<FrontData> front;
-	for (auto airMass : m_AirMassData)
-	{
-		for (auto airMass2 : m_AirMassData)
-		{
-			if (airMass == airMass2) {
-				continue;
-			}
-			front.push_back(airMass->IsHit(airMass2));
-		}
-	}
-
-	//move airmass
 	
-	for (auto airMass : m_AirMassData)
-	{
-		airMass->Move( XMFLOAT3(0,0,1), deltaT);
-		SetAirMassData();
-		SetWindData();
-	}
-	//fog is fromed when diff between air temp and dewpoint is less than 2.5 degeres c (https://glossary.ametsoc.org/wiki/Fog)
-	vector< WorldSquare*> WeatherActive;
-	//get/set weather effects
-	for (auto FrontData : front)
-	{
-		switch (FrontData._FrontType)
-		{
-		case WarmFront:
-		{
-			//GetSquareInArea(size of over lap ,pos of hit)
-			//humidity check for air mouster
-			
-			
+	//float tempdiff = sufaceTemp - dewPointTemp;
+	//if (tempdiff > 2.5f) {
+	//	//fog
 
-			//state the square percipitation conditions
-			std::vector<WorldSquare*> apple = GetSquareInArea(FrontData);
+	//}
+	//time componets
+	m_end = std::chrono::steady_clock::now();
+	if ((double)(std::chrono::duration_cast<std::chrono::seconds>(m_end - m_start).count() ) >= 10) {
 
-			for (auto world : apple)
+		std::vector<FrontData> front;
+		for (auto airMass : m_AirMassData)
+		{
+			for (auto airMass2 : m_AirMassData)
 			{
-				WeatherActive.push_back(world);
+				if (airMass == airMass2) {
+					continue;
+				}
+				front.push_back(airMass->IsHit(airMass2));
 			}
-			
-				
-
-			//summer 
-			//leading edge can produce rain
-
-			//winter
-			//no rain before
-			//persistant light to hevey rain in center
-			//super light rain to not rain after
 		}
-		break;
-		case ColdFront:
-		{
-			std::vector<WorldSquare*> apple = GetSquareInArea(FrontData);
 
-			for (auto world : apple)
+		//move airmass
+
+		for (auto airMass : m_AirMassData)
+		{
+			airMass->Move(XMFLOAT3(0, 0, 1), deltaT);
+			SetAirMassData();
+			SetWindData();
+			if (GetSquareInArea(airMass->GetSize(), airMass->GetPos()).size() == 0) {
+				ListHelpers::RemoveFromVector<AirMass*>(&m_AirMassData, &airMass);
+			}
+		}
+		//fog is fromed when diff between air temp and dewpoint is less than 2.5 degeres c (https://glossary.ametsoc.org/wiki/Fog)
+		vector< WorldSquare*> WeatherActive;
+		//get/set weather effects
+		for (auto FrontData : front)
+		{
+			switch (FrontData._FrontType)
 			{
-				WeatherActive.push_back(world);
+			case WarmFront:
+			{
+				std::vector<WorldSquare*> apple = GetSquareInArea(FrontData);
+
+				for (auto world : apple)
+				{
+					WeatherActive.push_back(world);
+				}
+
 			}
-			//hevey rain
-			//leading edge haze(fog)
-
-			//ledaing edge genrly light rain
-
-			//summer 
-			//leading edge can produce hevey rain (flowwing squal line)
-
-			//winter
-			//leading edge can produce hevey rain/snow (flowwing squal line)
-
-
-			//during prolong rain
-
-			//flowowed by rain to clear
-
-		}
-		break;
-		case StationaryFront:
-			//humidy high rain happens 
 			break;
-		case NoFront:
+			case ColdFront:
+			{
+				std::vector<WorldSquare*> apple = GetSquareInArea(FrontData);
+
+				for (auto world : apple)
+				{
+					WeatherActive.push_back(world);
+				}
+			}
 			break;
-		default:
-			break;
-		}
-	}
-
-
-
-	for (auto data : m_WorldSquareData)
-	{
-		bool remove = true;
-		for (auto world : WeatherActive)
-		{
-			if (world == data) {
-				world->SetActiveWeather();
-				remove = false;
+			case StationaryFront:
+				//humidy high rain happens 
+				break;
+			case NoFront:
+				break;
+			default:
 				break;
 			}
 		}
-		if (remove) {
-			data->DeatvateWeather();
+
+		if (m_AirMassData.size() <= 5) {
+			GenrateAirMass();
 		}
+		int totalSerfaceTemp=0;
+		int TotalDewPoint=0;
+		for (auto data : m_WorldSquareData)
+		{
+			bool remove = true;
+			for (auto world : WeatherActive)
+			{
+				if (world == data) {
+					world->SetActiveWeather();
+					remove = false;
+					break;
+				}
+			}
+			if (remove) {
+				data->DeatvateWeather();
+			}
+			totalSerfaceTemp += data->GetTempFromLayer(0);
+			TotalDewPoint += data->GetDewPoint();
+		}
+
+		float tempdiff = totalSerfaceTemp - TotalDewPoint;
+		if (tempdiff < 2.5f) {
+			//fog
+			FogOn = true;
+		}
+		else
+		{
+			FogOn = false;
+		}
+
+		//if not in front obay air mass rules
+
+		for (auto airMass : m_AirMassData)
+		{
+			std::vector<WorldSquare*> apple = GetSquareInArea(airMass->GetSize(), airMass->GetPos());
+			for (auto data : apple)
+			{
+				bool toChange = true;
+				for (auto world : WeatherActive)
+				{
+					if (world == data) {
+						toChange = false;
+						break;
+					}
+				}
+				if (toChange) {
+					data->SetSerfaceTemp(airMass->GetTemp());
+				}
+			}
+		}
+		m_start = std::chrono::steady_clock::now();
 	}
-	//if not in front obay air mass rules
 }
 
 
@@ -255,6 +275,13 @@ std::vector<PressureSystem*> WeatherMap::GetPressureSystemData()
 PressureSystem* WeatherMap::GetPressureSystem(int Num)
 {
 	return m_PressureSystems[Num];
+}
+
+void WeatherMap::GenrateAirMass()
+{
+	
+	CreatAirMass((AirMassType)RandomGen::random(0, 1, 1234), XMFLOAT3(RandomGen::randomFloat(m_WorldSquareData.front()->GetPos().x, m_WorldSquareData.back()->GetPos().x), 0, RandomGen::randomFloat(m_WorldSquareData.front()->GetPos().z, m_WorldSquareData.back()->GetPos().z)), RandomGen::random(10, 100), RandomGen::random(1000, 10000));
+
 }
 
 void WeatherMap::SetWindData()
